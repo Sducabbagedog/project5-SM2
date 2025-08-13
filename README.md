@@ -1,5 +1,14 @@
 # Project 5: SM2的软件实现优化
 
+## 快速开始
+
+可以直接执行：
+
+```
+python SM2_signature.py
+python SM2.py
+```
+
 ## 前言
 
 **SM2是**[国家密码管理局](https://baike.baidu.com/item/%E5%9B%BD%E5%AE%B6%E5%AF%86%E7%A0%81%E7%AE%A1%E7%90%86%E5%B1%80/2712999?fromModule=lemma_inlink)于2010年12月17日发布的椭圆曲线公钥密码算法。
@@ -303,7 +312,6 @@ Bob can deduce Alice secret key:
 ```
 
 这里Bob的私钥是随机选取的，你应该可以观察到 Alice和Bob都拿到了对方的私钥。
-
 
 ## SM2签名算法原理
 
