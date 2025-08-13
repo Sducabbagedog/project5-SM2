@@ -7,6 +7,7 @@
 ```
 python SM2_signature.py
 python SM2.py
+python Forged_signature.py
 ```
 
 ## 前言
