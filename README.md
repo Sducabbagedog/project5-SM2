@@ -420,3 +420,58 @@ dA=Inv(s+r)*(k-s) (mod n)
 ![1753184601237](image/README/1753184601237.png)
 
 ![1753184611933](image/README/1753184611933.png)
+
+## 伪造中本聪签名
+
+这种攻击被称为"Satoshi签名伪造"或"无消息ECDSA签名伪造"，其核心思想是在不知道真实私钥或真实消息的情况下，构造出能够通过验证的签名对(r, s)。
+
+### 代码实现
+
+代码在文件 `./Fored_signature.py`中，相当于是一个演示性的代码。你可以直接运行：
+
+```
+python Forged_signature.py
+```
+
+输出：
+
+```
+PS E:\VScodeprogram\project-5-SM2>  e:; cd 'e:\VScodeprogram\project-5-SM2'; & 'c:\Users\LENOVO\AppData\Local\Programs\Python\Python311\python.exe' 'c:\Users\LENOVO\.vscode\extensions\ms-python.debugpy-2025.10.0-win32-x64\bundled\libs\debugpy\launcher' '21625' '--' 'E:\VScodeprogram\project-5-SM2\Forged_signature.py' 
+=== 正常签名验证流程 ===
+私钥: 3, 公钥: (10, 6)
+签名: (16, 10)
+验证结果: True
+
+=== 伪造签名攻击演示 ===
+伪造的签名数据: e=8, r=7, s=18
+验证伪造签名的结果: True
+```
+
+这里使用的是一个缩小的数据，因为按照标准的数据代码运行时间过于长了。
+
+### 攻击原理
+
+1. **正常ECDSA签名流程** ：
+
+* 选择随机数k
+* 计算R = k*G，取r = R.x mod n
+* 计算e = hash(m)
+* 计算s = k⁻¹(e + d*r) mod n
+* 签名为(r, s)
+
+1. **伪造签名方法** ：
+
+* 随机选择u和v，与n互质
+* 计算R' = u*G + v*P (P是公钥d*G)
+* 取r' = R'.x mod n
+* 计算e' = r'*u*v⁻¹ mod n
+* 计算s' = r'*v⁻¹ mod n
+* (r', s')就是伪造的签名
+
+1. **为什么能通过验证** ：
+   验证时会计算：
+
+* w = s'⁻¹ mod n
+* u1 = e' *w mod n = (r'* u *v⁻¹)* (v*r'⁻¹) mod n = u mod n
+* u2 = r' *w mod n = r'* (v*r'⁻¹) mod n = v mod n
+* 最终验证点u1*G + u2*P = u*G + v*P = R'，其x坐标模n等于r'
